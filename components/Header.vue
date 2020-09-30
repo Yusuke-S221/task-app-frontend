@@ -15,15 +15,12 @@ header {
   padding: 20px;
   background-color: #527b8e;
 }
-
 ul {
   display: flex;
 }
-
 li {
   list-style: none;
 }
-
 a {
   color: aliceblue;
 }
