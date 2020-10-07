@@ -1,12 +1,11 @@
 <template>
-  <div class="card">
+  <div class="project-card">
     <slot></slot>
   </div>
 </template>
 
 <style scoped>
-card {
+.project-card {
   padding: 20px;
-  background-color: #527b8e;
 }
 </style>

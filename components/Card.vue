@@ -1,12 +1,11 @@
 <template>
-  <div class="card">
+  <el-card class="card">
     <slot></slot>
-  </div>
+  </el-card>
 </template>
 
 <style scoped>
-card {
-  padding: 20px;
-  background-color: #527b8e;
+.card {
+  width: 100%;
 }
 </style>
