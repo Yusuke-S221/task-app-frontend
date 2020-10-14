@@ -33,6 +33,10 @@ const projects = [
   }
 ]
 
+const data = {
+  createDialogVisible: false
+};
+
 const mockAxios = {
   $get: jest.fn().mockResolvedValue(projects),
   $post: jest.fn().mockResolvedValue({ status: 201 })
@@ -42,6 +46,9 @@ describe("Projects", () => {
   let wrapper
   beforeEach(() => {
     wrapper = shallowMount(Projects, {
+      data() {
+        return data
+      },
       mocks: {
         $axios: mockAxios
       }
@@ -52,7 +59,16 @@ describe("Projects", () => {
     expect(wrapper.vm).toBeTruthy();
   });
 
-  describe("Fetch project", () => {
+  describe("method closeCreateDialog", () => {
+    it("closes create dialog", () => {
+    console.log(wrapper);
+    wrapper.vm.$data.createDialogVisible = true
+    wrapper.vm.closeCreateDialog();
+    expect(wrapper.vm.$data.createDialogVisible).toBe(false)
+    })
+  })
+
+  describe("method fetchProjects", () => {
     it("calls GET http://localhost:80/api/projects", async () => {
       wrapper.vm.fetchProjects();
       await flushPromises()
@@ -62,7 +78,7 @@ describe("Projects", () => {
     });
   });
 
-  describe("Create project", () => {
+  describe("method createProject", () => {
     it("calls POST http://localhost:80/api/projects", async () => {
       wrapper.vm.createProject();
       await flushPromises()
@@ -73,6 +89,20 @@ describe("Projects", () => {
           description: ""
         }
       );
+    });
+
+    it("calls method fetchProjects", async () => {
+      wrapper.vm.fetchProjects = jest.fn()
+      wrapper.vm.createProject();
+      await flushPromises()
+      expect(wrapper.vm.fetchProjects).toHaveBeenCalled()
+    });
+
+    it("calls method closeCreateDialog", async () => {
+      wrapper.vm.closeCreateDialog = jest.fn()
+      wrapper.vm.createProject();
+      await flushPromises()
+      expect(wrapper.vm.closeCreateDialog).toHaveBeenCalled()
     });
   });
 });

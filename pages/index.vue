@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading"> 
     <Header />
     <Title>プロジェクト一覧</Title>
     <el-button
@@ -51,6 +51,7 @@ import Header from "~/components/Header.vue";
 import Title from "~/components/Title.vue";
 import Card from "~/components/Card.vue";
 import ProjectCard from "~/components/ProjectCard.vue";
+import Element from 'element-ui';
 
 export default {
   components: {
@@ -66,19 +67,33 @@ export default {
         title: "",
         description: ""
       },
-      formLabelWidth: "140px"
+      formLabelWidth: "140px",
+      fullscreenLoading: false
     };
   },
 
   async asyncData({ $axios }) {
     const res = await $axios.$get("http://localhost:80/api/projects");
-    console.log(res);
     return {
       projects: res
     };
   },
 
   methods: {
+    closeCreateDialog() {
+      this.form.title = "";
+      this.form.description = "";
+      this.createDialogVisible = false;
+    },
+
+    startLoading() {
+      this.fullscreenLoading = true;
+    },
+
+    endLoading() {
+      this.fullscreenLoading = false;
+    },
+
     async fetchProjects() {
       const res = await this.$axios.$get(
         "http://localhost:80/api/projects"
@@ -87,8 +102,8 @@ export default {
     },
 
     async createProject() {
+      this.startLoading()
       try {
-        console.log("aaaaa");
         const res = await this.$axios.$post(
           "http://localhost:80/api/projects",
           {
@@ -96,13 +111,17 @@ export default {
             description: this.form.description
           }
         );
+        this.$message({
+          message: 'プロジェクトを作成しました',
+          type: 'success'
+        });
       } catch (err) {
         console.log(err);
+        this.$message.error('プロジェクト作成に失敗しました');
       } finally {
         await this.fetchProjects();
-        this.form.title = "";
-        this.form.description = "";
-        this.createDialogVisible = false;
+        this.endLoading()
+        this.closeCreateDialog()
       }
     }
   }
