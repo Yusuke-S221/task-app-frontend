@@ -59,7 +59,7 @@ describe("Projects", () => {
     expect(wrapper.vm).toBeTruthy();
   });
 
-  describe("Close create dialog", () => {
+  describe("method closeCreateDialog", () => {
     it("closes create dialog", () => {
     console.log(wrapper);
     wrapper.vm.$data.createDialogVisible = true
@@ -68,7 +68,7 @@ describe("Projects", () => {
     })
   })
 
-  describe("Fetch project", () => {
+  describe("method fetchProjects", () => {
     it("calls GET http://localhost:80/api/projects", async () => {
       wrapper.vm.fetchProjects();
       await flushPromises()
@@ -78,7 +78,7 @@ describe("Projects", () => {
     });
   });
 
-  describe("Create project", () => {
+  describe("method createProject", () => {
     it("calls POST http://localhost:80/api/projects", async () => {
       wrapper.vm.createProject();
       await flushPromises()
@@ -89,6 +89,20 @@ describe("Projects", () => {
           description: ""
         }
       );
+    });
+
+    it("calls method fetchProjects", async () => {
+      wrapper.vm.fetchProjects = jest.fn()
+      wrapper.vm.createProject();
+      await flushPromises()
+      expect(wrapper.vm.fetchProjects).toHaveBeenCalled()
+    });
+
+    it("calls method closeCreateDialog", async () => {
+      wrapper.vm.closeCreateDialog = jest.fn()
+      wrapper.vm.createProject();
+      await flushPromises()
+      expect(wrapper.vm.closeCreateDialog).toHaveBeenCalled()
     });
   });
 });
