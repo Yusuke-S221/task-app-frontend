@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading"> 
     <Header />
     <Title>プロジェクト一覧</Title>
     <el-button
@@ -67,7 +67,8 @@ export default {
         title: "",
         description: ""
       },
-      formLabelWidth: "140px"
+      formLabelWidth: "140px",
+      fullscreenLoading: false
     };
   },
 
@@ -85,6 +86,14 @@ export default {
       this.createDialogVisible = false;
     },
 
+    startLoading() {
+      this.fullscreenLoading = true;
+    },
+
+    endLoading() {
+      this.fullscreenLoading = false;
+    },
+
     async fetchProjects() {
       const res = await this.$axios.$get(
         "http://localhost:80/api/projects"
@@ -93,6 +102,7 @@ export default {
     },
 
     async createProject() {
+      this.startLoading()
       try {
         const res = await this.$axios.$post(
           "http://localhost:80/api/projects",
@@ -105,6 +115,7 @@ export default {
         console.log(err);
       } finally {
         await this.fetchProjects();
+        this.endLoading()
         this.closeCreateDialog()
       }
     }
