@@ -2,7 +2,10 @@
   <div>
     <Header />
     <Title>プロジェクト一覧</Title>
-    <el-button type="primary" class="create-button" @click="createProject"
+    <el-button
+      type="primary"
+      class="create-button"
+      @click="createDialogVisible = true"
       >新規作成</el-button
     >
     <div class="contents">
@@ -26,6 +29,20 @@
         </Card>
       </div>
     </div>
+    <el-dialog title="プロジェクト新規作成" :visible.sync="createDialogVisible">
+      <el-form :model="form">
+        <el-form-item label="プロジェクト名" :label-width="formLabelWidth">
+          <el-input v-model="form.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="プロジェクト概要" :label-width="formLabelWidth">
+          <el-input v-model="form.description" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialogVisible = false">キャンセル</el-button>
+        <el-button type="primary" @click="createProject">新規作成</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -42,12 +59,52 @@ export default {
     ProjectCard
   },
 
+  data() {
+    return {
+      createDialogVisible: false,
+      form: {
+        title: "",
+        description: ""
+      },
+      formLabelWidth: "140px"
+    };
+  },
+
   async asyncData({ $axios }) {
     const res = await $axios.$get("http://localhost:80/api/projects");
     console.log(res);
     return {
       projects: res
     };
+  },
+
+  methods: {
+    async fetchProjects() {
+      const res = await this.$axios.$get(
+        "http://localhost:80/api/projects"
+      );
+      this.$data.projects = res
+    },
+
+    async createProject() {
+      try {
+        console.log("aaaaa");
+        const res = await this.$axios.$post(
+          "http://localhost:80/api/projects",
+          {
+            title: this.form.title,
+            description: this.form.description
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      } finally {
+        await this.fetchProjects();
+        this.form.title = "";
+        this.form.description = "";
+        this.createDialogVisible = false;
+      }
+    }
   }
 };
 </script>
