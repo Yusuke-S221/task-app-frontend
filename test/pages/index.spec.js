@@ -42,6 +42,10 @@ const mockAxios = {
   $post: jest.fn().mockResolvedValue({ status: 201 })
 };
 
+const message = {
+  error: jest.fn()
+}
+
 describe("Projects", () => {
   let wrapper
   beforeEach(() => {
@@ -50,7 +54,8 @@ describe("Projects", () => {
         return data
       },
       mocks: {
-        $axios: mockAxios
+        $axios: mockAxios,
+        $message: message
       }
     });
   })
@@ -59,9 +64,24 @@ describe("Projects", () => {
     expect(wrapper.vm).toBeTruthy();
   });
 
+  describe("method startLoading", () => {
+    it("starts loading circle", () => {
+    wrapper.vm.$data.fullscreenLoading = false
+    wrapper.vm.startLoading();
+    expect(wrapper.vm.$data.fullscreenLoading).toBe(true)
+    })
+  })
+
+  describe("method endLoading", () => {
+    it("ends loading circle", () => {
+    wrapper.vm.$data.fullscreenLoading = true
+    wrapper.vm.endLoading();
+    expect(wrapper.vm.$data.fullscreenLoading).toBe(false)
+    })
+  })
+
   describe("method closeCreateDialog", () => {
     it("closes create dialog", () => {
-    console.log(wrapper);
     wrapper.vm.$data.createDialogVisible = true
     wrapper.vm.closeCreateDialog();
     expect(wrapper.vm.$data.createDialogVisible).toBe(false)
@@ -91,6 +111,13 @@ describe("Projects", () => {
       );
     });
 
+    it("calls method startLoading", async () => {
+      wrapper.vm.startLoading = jest.fn()
+      wrapper.vm.createProject();
+      await flushPromises()
+      expect(wrapper.vm.startLoading).toHaveBeenCalled()
+    });
+
     it("calls method fetchProjects", async () => {
       wrapper.vm.fetchProjects = jest.fn()
       wrapper.vm.createProject();
@@ -103,6 +130,13 @@ describe("Projects", () => {
       wrapper.vm.createProject();
       await flushPromises()
       expect(wrapper.vm.closeCreateDialog).toHaveBeenCalled()
+    });
+
+    it("calls method endLoading", async () => {
+      wrapper.vm.endLoading = jest.fn()
+      wrapper.vm.createProject();
+      await flushPromises()
+      expect(wrapper.vm.endLoading).toHaveBeenCalled()
     });
   });
 });
