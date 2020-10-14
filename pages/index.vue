@@ -51,6 +51,7 @@ import Header from "~/components/Header.vue";
 import Title from "~/components/Title.vue";
 import Card from "~/components/Card.vue";
 import ProjectCard from "~/components/ProjectCard.vue";
+import Element from 'element-ui';
 
 export default {
   components: {
@@ -72,13 +73,18 @@ export default {
 
   async asyncData({ $axios }) {
     const res = await $axios.$get("http://localhost:80/api/projects");
-    console.log(res);
     return {
       projects: res
     };
   },
 
   methods: {
+    closeCreateDialog() {
+      this.form.title = "";
+      this.form.description = "";
+      this.createDialogVisible = false;
+    },
+
     async fetchProjects() {
       const res = await this.$axios.$get(
         "http://localhost:80/api/projects"
@@ -88,7 +94,6 @@ export default {
 
     async createProject() {
       try {
-        console.log("aaaaa");
         const res = await this.$axios.$post(
           "http://localhost:80/api/projects",
           {
@@ -100,9 +105,7 @@ export default {
         console.log(err);
       } finally {
         await this.fetchProjects();
-        this.form.title = "";
-        this.form.description = "";
-        this.createDialogVisible = false;
+        this.closeCreateDialog()
       }
     }
   }

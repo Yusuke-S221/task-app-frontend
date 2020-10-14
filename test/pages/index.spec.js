@@ -33,6 +33,10 @@ const projects = [
   }
 ]
 
+const data = {
+  createDialogVisible: false
+};
+
 const mockAxios = {
   $get: jest.fn().mockResolvedValue(projects),
   $post: jest.fn().mockResolvedValue({ status: 201 })
@@ -42,6 +46,9 @@ describe("Projects", () => {
   let wrapper
   beforeEach(() => {
     wrapper = shallowMount(Projects, {
+      data() {
+        return data
+      },
       mocks: {
         $axios: mockAxios
       }
@@ -51,6 +58,15 @@ describe("Projects", () => {
   it("is a vue instance", () => {
     expect(wrapper.vm).toBeTruthy();
   });
+
+  describe("Close create dialog", () => {
+    it("closes create dialog", () => {
+    console.log(wrapper);
+    wrapper.vm.$data.createDialogVisible = true
+    wrapper.vm.closeCreateDialog();
+    expect(wrapper.vm.$data.createDialogVisible).toBe(false)
+    })
+  })
 
   describe("Fetch project", () => {
     it("calls GET http://localhost:80/api/projects", async () => {
