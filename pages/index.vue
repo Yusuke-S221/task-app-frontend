@@ -120,8 +120,8 @@ export default {
         this.$message.error('プロジェクト作成に失敗しました');
       } finally {
         await this.fetchProjects();
-        this.endLoading()
         this.closeCreateDialog()
+        this.endLoading()
       }
     }
   }
