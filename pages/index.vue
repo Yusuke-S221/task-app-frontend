@@ -122,6 +122,7 @@ export default {
             description: this.form.description
           }
         );
+        await this.fetchProjects();
         this.$message({
           message: 'プロジェクトを作成しました',
           type: 'success'
@@ -130,7 +131,6 @@ export default {
         console.log(err);
         this.$message.error('プロジェクト作成に失敗しました');
       } finally {
-        await this.fetchProjects();
         this.closeCreateDialog()
         this.endLoading()
       }

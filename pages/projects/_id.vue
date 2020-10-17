@@ -126,6 +126,7 @@ export default {
             description: this.form.description
           }
         );
+        await this.fetchProject();
         this.$message({
           message: 'プロジェクトを更新しました',
           type: 'success'
@@ -134,7 +135,6 @@ export default {
         console.log(err);
         this.$message.error('プロジェクト更新に失敗しました');
       } finally {
-        await this.fetchProject();
         this.closeDialog()
         this.endLoading()
       }
@@ -145,17 +145,16 @@ export default {
       try {
         const res = await this.$axios.$delete(
           `http://localhost:80/api/projects/${this.project.id}`);
+        this.$router.push('/')
         this.$message({
           message: 'プロジェクトを削除しました',
           type: 'success'
         });
-        this.$router.push('/')
       } catch (err) {
         console.log(err);
-        this.$message.error('プロジェクト削除に失敗しました');
-        await this.fetchProject();
         this.closeDialog()
         this.endLoading()
+        this.$message.error('プロジェクト削除に失敗しました');
       } 
     }
   }
