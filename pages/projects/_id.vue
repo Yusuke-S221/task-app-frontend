@@ -48,6 +48,7 @@
       </span>
     </el-dialog>
     <el-dialog title="プロジェクト削除" :visible.sync="deleteDialogVisible">
+      <p>プロジェクト『 {{ project.title }} 』を削除します。よろしいですか？</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteDialogVisible = false">キャンセル</el-button>
         <el-button type="danger" class="delete-button" @click="deleteProject">削除</el-button>
