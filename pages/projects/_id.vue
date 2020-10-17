@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading">
   <Header />
     <Title>プロジェクト詳細</Title>
     <div class="content">
@@ -66,6 +66,7 @@ import Element from 'element-ui';
 export default {
   components: {
     Header,
+    Title,
     Card,
     ProjectCard
   },
@@ -73,8 +74,9 @@ export default {
   data() {
     return {
       editDialogVisible: false,
-      formLabelWidth: "140px",
       deleteDialogVisible: false,
+      formLabelWidth: "140px",
+      fullscreenLoading: false,
       form: {
         title: "",
         description: ""
@@ -93,15 +95,10 @@ export default {
     };
   },
 
-  method: {
-    closeEditDialog() {
-      this.form.title = "";
-      this.form.description = "";
-      this.createDialogVisible = false;
-    },
-
-    closeDeleteDialog() {
-      this.createDialogVisible = false;
+  methods: {
+    closeDialog() {
+      this.editDialogVisible = false;
+      this.deleteDialogVisible = false;
     },
 
     startLoading() {
@@ -114,16 +111,16 @@ export default {
 
     async fetchProject() {
       const res = await this.$axios.$get(
-        `http://localhost:80/api/projects/${params.id}`
+        `http://localhost:80/api/projects/${this.project.id}`
       );
-      this.$data.projects = res
+      this.project = res
     },
 
     async editProject() {
       this.startLoading()
       try {
         const res = await this.$axios.$put(
-          `http://localhost:80/api/projects/${params.id}`,
+          `http://localhost:80/api/projects/${this.project.id}`,
           {
             title: this.form.title,
             description: this.form.description
@@ -147,24 +144,19 @@ export default {
       this.startLoading()
       try {
         const res = await this.$axios.$delete(
-          `http://localhost:80/api/projects/${params.id}`,
-          {
-            title: this.form.title,
-            description: this.form.description
-          }
-        );
+          `http://localhost:80/api/projects/${this.project.id}`);
         this.$message({
-          message: 'プロジェクトを作成しました',
+          message: 'プロジェクトを削除しました',
           type: 'success'
         });
+        this.$router.push('/')
       } catch (err) {
         console.log(err);
-        this.$message.error('プロジェクト作成に失敗しました');
-      } finally {
+        this.$message.error('プロジェクト削除に失敗しました');
         await this.fetchProject();
         this.closeDialog()
         this.endLoading()
-      }
+      } 
     }
   }
 }
