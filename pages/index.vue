@@ -66,6 +66,7 @@ import Element from 'element-ui';
 export default {
   components: {
     Header,
+    Title,
     Card,
     ProjectCard
   },
@@ -108,7 +109,7 @@ export default {
       const res = await this.$axios.$get(
         "http://localhost:80/api/projects"
       );
-      this.$data.projects = res
+      this.projects = res
     },
 
     async createProject() {
