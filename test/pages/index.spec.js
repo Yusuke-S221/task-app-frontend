@@ -1,10 +1,6 @@
-import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
+import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import Projects from "~/pages/index.vue";
 import flushPromises from "flush-promises";
-import Element from 'element-ui';
-
-const localVue = createLocalVue()
-localVue.use(Element)
 
 const projects = [
   {
