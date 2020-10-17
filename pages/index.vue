@@ -1,13 +1,15 @@
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading"> 
     <Header />
-    <Title>プロジェクト一覧</Title>
-    <el-button
-      type="primary"
-      class="create-button"
-      @click="createDialogVisible = true"
-      >新規作成</el-button
-    >
+    <div class="page-title">
+      <Title>プロジェクト一覧</Title>
+      <el-button
+        type="primary"
+        class="create-button"
+        @click="createDialogVisible = true"
+        >新規作成</el-button
+      >
+    </div>
     <div class="contents">
       <div
         v-for="project in projects"
@@ -15,18 +17,26 @@
         :project="project"
         class="project-cards"
       >
-        <Card>
-          <ProjectCard>
-            <div class="project-content">
-              <div class="project-title">
-                <h3>{{ project.title }}</h3>
+          <Card>
+            <ProjectCard>
+              <div class="project-content">
+                <nuxt-link :to="`/projects/${project.id}`">
+                  <div class="project-id">
+                    <h3>{{ project.id }}</h3>
+                  </div>
+                  <div class="project-state">
+                    <h3>{{ project.state }}</h3>
+                  </div>
+                  <div class="project-title">
+                    <h3>{{ project.title }}</h3>
+                  </div>
+                  <div class="project-description">
+                    {{ project.description }}
+                  </div>
+                </nuxt-link>
               </div>
-              <div class="project-description">
-                {{ project.description }}
-              </div>
-            </div>
-          </ProjectCard>
-        </Card>
+            </ProjectCard>
+          </Card>
       </div>
     </div>
     <el-dialog title="プロジェクト新規作成" :visible.sync="createDialogVisible">
@@ -40,7 +50,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="createDialogVisible = false">キャンセル</el-button>
-        <el-button type="primary" @click="createProject">新規作成</el-button>
+        <el-button type="primary" class="create-button" @click="createProject">新規作成</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,12 +73,12 @@ export default {
   data() {
     return {
       createDialogVisible: false,
+      formLabelWidth: "140px",
+      fullscreenLoading: false,
       form: {
         title: "",
         description: ""
-      },
-      formLabelWidth: "140px",
-      fullscreenLoading: false
+      }
     };
   },
 
@@ -129,8 +139,10 @@ export default {
 </script>
 
 <style scoped>
+.page-title {
+  margin: 50px;
+}
 .create-button {
-  margin-left: 60px;
   font-size: 16px;
   font-weight: bold;
 }
@@ -145,5 +157,14 @@ export default {
   width: 48%;
   margin: 10px;
   box-sizing: border-box;
+}
+
+.project-id,
+.project-title,
+.project-state,
+.project-description {
+  text-decoration: none;
+  text-decoration: none;
+  color: black;
 }
 </style>
