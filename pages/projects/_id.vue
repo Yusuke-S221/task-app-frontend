@@ -1,0 +1,203 @@
+<template>
+  <div>
+  <Header />
+    <Title>プロジェクト詳細</Title>
+    <div class="content">
+      <Card>
+        <ProjectCard>
+          <div class="project-content">
+            <div class="project-state">
+              <h3>{{ project.state }}</h3>
+            </div>
+            <div class="project-title">
+              <h3>{{ project.title }}</h3>
+            </div>
+            <div class="project-description">
+              {{ project.description }}
+            </div>
+            <div class="button">
+              <el-button
+                type="success"
+                class="edit-button"
+                @click="editDialogVisible = true"
+                >編集</el-button
+              >
+              <el-button
+                type="danger"
+                class="delete-button"
+                @click="deleteDialogVisible = true"
+                >削除</el-button
+              >
+            </div>
+          </div>
+        </ProjectCard>
+      </Card>
+    </div>
+    <el-dialog title="プロジェクト編集" :visible.sync="editDialogVisible">
+      <el-form :model="form">
+        <el-form-item label="プロジェクト名" :label-width="formLabelWidth">
+          <el-input v-model="form.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="プロジェクト概要" :label-width="formLabelWidth">
+          <el-input v-model="form.description" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">キャンセル</el-button>
+        <el-button type="success" class="edit-button" @click="editProject">編集</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="プロジェクト削除" :visible.sync="deleteDialogVisible">
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialogVisible = false">キャンセル</el-button>
+        <el-button type="danger" class="delete-button" @click="deleteProject">削除</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import Header from "~/components/Header.vue";
+import Title from "~/components/Title.vue";
+import Card from "~/components/Card.vue";
+import ProjectCard from "~/components/ProjectCard.vue";
+import Element from 'element-ui';
+
+export default {
+  components: {
+    Header,
+    Card,
+    ProjectCard
+  },
+
+  data() {
+    return {
+      editDialogVisible: false,
+      formLabelWidth: "140px",
+      deleteDialogVisible: false,
+      form: {
+        title: "",
+        description: ""
+      }
+    }
+  },
+
+  async asyncData({ $axios,params }) {
+    const res = await $axios.$get(`http://localhost:80/api/projects/${params.id}`);
+    return {
+      project: res,
+      form: {
+        title: res.title,
+        description: res.description
+      }
+    };
+  },
+
+  method: {
+    closeEditDialog() {
+      this.form.title = "";
+      this.form.description = "";
+      this.createDialogVisible = false;
+    },
+
+    closeDeleteDialog() {
+      this.createDialogVisible = false;
+    },
+
+    startLoading() {
+      this.fullscreenLoading = true;
+    },
+
+    endLoading() {
+      this.fullscreenLoading = false;
+    },
+
+    async fetchProject() {
+      const res = await this.$axios.$get(
+        `http://localhost:80/api/projects/${params.id}`
+      );
+      this.$data.projects = res
+    },
+
+    async editProject() {
+      this.startLoading()
+      try {
+        const res = await this.$axios.$put(
+          `http://localhost:80/api/projects/${params.id}`,
+          {
+            title: this.form.title,
+            description: this.form.description
+          }
+        );
+        this.$message({
+          message: 'プロジェクトを更新しました',
+          type: 'success'
+        });
+      } catch (err) {
+        console.log(err);
+        this.$message.error('プロジェクト更新に失敗しました');
+      } finally {
+        await this.fetchProject();
+        this.closeDialog()
+        this.endLoading()
+      }
+    },
+
+    async deleteProject() {
+      this.startLoading()
+      try {
+        const res = await this.$axios.$delete(
+          `http://localhost:80/api/projects/${params.id}`,
+          {
+            title: this.form.title,
+            description: this.form.description
+          }
+        );
+        this.$message({
+          message: 'プロジェクトを作成しました',
+          type: 'success'
+        });
+      } catch (err) {
+        console.log(err);
+        this.$message.error('プロジェクト作成に失敗しました');
+      } finally {
+        await this.fetchProject();
+        this.closeDialog()
+        this.endLoading()
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.create-button {
+  margin-left: 60px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.content {
+  margin: 60px;
+}
+
+.project-cards {
+  width: 48%;
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.button {
+  text-align: right;
+}
+
+.edit-button {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.delete-button {
+  font-size: 16px;
+  font-weight: bold;
+}
+</style>
