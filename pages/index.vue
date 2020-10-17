@@ -91,18 +91,18 @@ export default {
   },
 
   methods: {
-    closeCreateDialog() {
-      this.form.title = "";
-      this.form.description = "";
-      this.createDialogVisible = false;
-    },
-
     startLoading() {
       this.fullscreenLoading = true;
     },
 
     endLoading() {
       this.fullscreenLoading = false;
+    },
+
+    closeCreateDialog() {
+      this.form.title = "";
+      this.form.description = "";
+      this.createDialogVisible = false;
     },
 
     async fetchProjects() {

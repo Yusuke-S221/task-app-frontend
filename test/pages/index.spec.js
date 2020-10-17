@@ -5,32 +5,33 @@ import flushPromises from "flush-promises";
 const projects = [
   {
     id: 1,
-    name: 'テスト1',
+    title: 'テスト1',
     description: '内容1',
-    status: 'progress',
+    state: 'progress',
     created_at: '2020-01-01 01:01:01',
     updated_at: '2020-01-01 01:01:01'
   },
   {
     id: 2,
-    name: 'テスト2',
+    title: 'テスト2',
     description: '内容2',
-    status: 'progress',
+    state: 'progress',
     created_at: '2020-01-01 01:01:01',
     updated_at: '2020-01-01 01:01:01'
   },
   {
     id: 3,
-    name: 'テスト3',
+    title: 'テスト3',
     description: '内容3',
-    status: 'progress',
+    state: 'progress',
     created_at: '2020-01-01 01:01:01',
     updated_at: '2020-01-01 01:01:01'
   }
 ]
 
 const data = {
-  createDialogVisible: false
+  createDialogVisible: false,
+  fullscreenLoading: false
 };
 
 const mockAxios = {
@@ -99,13 +100,17 @@ describe("Projects", () => {
 
   describe("method createProject", () => {
     it("calls POST http://localhost:80/api/projects", async () => {
+      wrapper.vm.$data.form = {
+        title: 'テスト',
+        description: '内容'
+      }
       wrapper.vm.createProject();
       await flushPromises()
       expect(mockAxios.$post).toHaveBeenCalledWith(
         "http://localhost:80/api/projects", 
         {
-          title: "",
-          description: ""
+          title: 'テスト',
+          description: '内容'
         }
       );
     });
