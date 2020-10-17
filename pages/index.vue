@@ -128,7 +128,6 @@ export default {
           type: 'success'
         });
       } catch (err) {
-        console.log(err);
         this.$message.error('プロジェクト作成に失敗しました');
       } finally {
         this.closeCreateDialog()

@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue } from "@vue/test-utils";
+import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
 import Projects from "~/pages/index.vue";
 import flushPromises from "flush-promises";
 import Element from 'element-ui';
@@ -56,6 +56,9 @@ describe("Projects", () => {
       mocks: {
         $axios: mockAxios,
         $message: message
+      },
+      stubs: {
+        NuxtLink: RouterLinkStub
       }
     });
   })
