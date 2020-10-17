@@ -97,17 +97,17 @@ export default {
   },
 
   methods: {
-    closeDialog() {
-      this.editDialogVisible = false;
-      this.deleteDialogVisible = false;
-    },
-
     startLoading() {
       this.fullscreenLoading = true;
     },
 
     endLoading() {
       this.fullscreenLoading = false;
+    },
+
+    closeDialog() {
+      this.editDialogVisible = false;
+      this.deleteDialogVisible = false;
     },
 
     async fetchProject() {
