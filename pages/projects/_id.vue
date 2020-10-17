@@ -133,7 +133,6 @@ export default {
           type: 'success'
         });
       } catch (err) {
-        console.log(err);
         this.$message.error('プロジェクト更新に失敗しました');
       } finally {
         this.closeDialog()
@@ -152,7 +151,6 @@ export default {
           type: 'success'
         });
       } catch (err) {
-        console.log(err);
         this.closeDialog()
         this.endLoading()
         this.$message.error('プロジェクト削除に失敗しました');
