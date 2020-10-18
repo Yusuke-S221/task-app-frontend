@@ -39,7 +39,13 @@ const mockAxios = {
   $post: jest.fn().mockResolvedValue({ status: 201 })
 };
 
-const message = {
+const errorMockAxios = {
+  $post: jest.fn().mockResolvedValue(new Error('Error'))
+}
+
+const message = jest.fn()
+
+const errorMessage = {
   error: jest.fn()
 }
 
@@ -142,5 +148,37 @@ describe("Projects", () => {
       await flushPromises()
       expect(wrapper.vm.endLoading).toHaveBeenCalled()
     });
+
+    describe("success response", () => {
+      it("calls message success", async () => {
+        wrapper.vm.createProject();
+        await flushPromises()
+        expect(message).toHaveBeenCalled();
+      })
+    })
+
+    describe("error response", () => {
+      let errorWrapper
+      beforeEach(() => {
+        errorWrapper = shallowMount(Projects, {
+          data() {
+            return data
+          },
+          mocks: {
+            $axios: errorMockAxios,
+            $message: errorMessage
+          },
+          stubs: {
+            NuxtLink: RouterLinkStub
+          }
+        });
+      })
+      
+      it("calls message error", async () => {
+        errorWrapper.vm.createProject();
+        await flushPromises()
+        expect(errorMessage.error).toHaveBeenCalled();
+      })
+    })
   });
 });
