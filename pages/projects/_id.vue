@@ -151,9 +151,9 @@ export default {
           type: 'success'
         });
       } catch (err) {
+        this.$message.error('プロジェクト削除に失敗しました');
         this.closeDialog()
         this.endLoading()
-        this.$message.error('プロジェクト削除に失敗しました');
       } 
     }
   }
