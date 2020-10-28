@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       createDialogVisible: false,
+      formLabelWidth: "140px",
       fullscreenLoading: false,
       form: {
         title: "テストissue",
@@ -56,6 +57,26 @@ export default {
         "http://localhost:80/api/issues"
       );
       this.issues = res
+    },
+
+    async createIssue() {
+      this.startLoading()
+      try {
+        const res = this.$axios.$post("http://localhost:80/api/issues", {
+          title: 'テスト',
+          description: '内容'
+        })
+        this.fetchIssues();
+        this.$message({
+          message: 'イシューを作成しました',
+          type: 'success'
+        });
+      } catch(err) {
+        this.$message.error('イシュー作成に失敗しました');
+      } finally {
+        this.closeCreateDialog()
+        this.endLoading()
+      }
     }
   }
 }
