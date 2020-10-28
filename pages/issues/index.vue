@@ -28,6 +28,14 @@ export default {
     }
   },
 
+  async asyncData({ $axios }) {
+    const res = await $axios.$get("http://localhost:80/api/issues");
+    console.log(res);
+    return {
+      issues: res
+    };
+  },
+
   methods: {
     startLoading() {
       this.fullscreenLoading = true;
@@ -41,6 +49,13 @@ export default {
       this.form.title = "";
       this.form.description = "";
       this.createDialogVisible = false;
+    },
+
+    async fetchIssues() {
+      const res = await this.$axios.$get(
+        "http://localhost:80/api/issues"
+      );
+      this.issues = res
     }
   }
 }

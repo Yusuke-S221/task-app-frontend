@@ -35,10 +35,38 @@ const issues = [
   }
 ]
 
+const data = {
+  createDialogVisible: false,
+  fullscreenLoading: false
+};
+
+const mockAxios = {
+  $get: jest.fn().mockResolvedValue(issues),
+  $post: jest.fn().mockResolvedValue({ status: 201 })
+};
+
+const errorMockAxios = {
+  $get: jest.fn().mockResolvedValue(new Error('Error')),
+  $post: jest.fn().mockResolvedValue(new Error('Error'))
+}
+
+const message = jest.fn()
+
+const errorMessage = {
+  error: jest.fn()
+}
+
 describe('Issues', () => {
   let wrapper 
   beforeEach(() => {
     wrapper = shallowMount(Issues, {
+      data() {
+        return data
+      },
+      mocks: {
+        $axios: mockAxios,
+        $message: message
+      },
       stubs: {
         NuxtLink: RouterLinkStub
       }
@@ -70,6 +98,16 @@ describe('Issues', () => {
     wrapper.vm.$data.createDialogVisible = true
     wrapper.vm.closeCreateDialog();
     expect(wrapper.vm.$data.createDialogVisible).toBe(false)
+    })
+  })
+
+  describe("method fetchIssues", () => {
+    it("calls GET http://localhost:80/api/issues", async () => {
+      wrapper.vm.fetchIssues();
+      await flushPromises()
+      expect(mockAxios.$get).toHaveBeenCalledWith(
+        "http://localhost:80/api/issues"
+      )
     })
   })
 })

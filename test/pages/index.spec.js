@@ -96,46 +96,12 @@ describe("Projects", () => {
   })
 
   describe("method fetchProjects", () => {
-    describe("success response", () => {
-      it("calls GET http://localhost:80/api/projects", async () => {
-        wrapper.vm.fetchProjects();
-        await flushPromises()
-        expect(mockAxios.$get).toHaveBeenCalledWith(
-          "http://localhost:80/api/projects"
-        );
-      });
-    })
-
-    describe("error response", () => {
-      let errorWrapper
-      beforeEach(() => {
-        errorWrapper = shallowMount(Projects, {
-          data() {
-            return data
-          },
-          mocks: {
-            $axios: errorMockAxios,
-            $message: errorMessage
-          },
-          stubs: {
-            NuxtLink: RouterLinkStub
-          }
-        });
-      })
-
-      it("calls GET http://localhost:80/api/projects", async () => {
-        errorWrapper.vm.fetchProjects();
-        await flushPromises()
-        expect(errorMockAxios.$get).toHaveBeenCalledWith(
-          "http://localhost:80/api/projects"
-        );
-      });
-
-      it("calls message error", async () => {
-        errorWrapper.vm.createProject();
-        await flushPromises()
-        expect(errorMessage.error).toHaveBeenCalled();
-      })      
+    it("calls GET http://localhost:80/api/projects", async () => {
+      wrapper.vm.fetchProjects();
+      await flushPromises()
+      expect(mockAxios.$get).toHaveBeenCalledWith(
+        "http://localhost:80/api/projects"
+      );
     })
   });
 
