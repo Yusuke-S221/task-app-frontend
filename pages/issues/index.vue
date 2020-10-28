@@ -19,7 +19,12 @@ export default {
 
   data() {
     return {
-      fullscreenLoading: false
+      createDialogVisible: false,
+      fullscreenLoading: false,
+      form: {
+        title: "テストissue",
+        description: "テスト内容"
+      }
     }
   },
 
@@ -30,6 +35,12 @@ export default {
 
     endLoading() {
       this.fullscreenLoading = false;
+    },
+
+    closeCreateDialog() {
+      this.form.title = "";
+      this.form.description = "";
+      this.createDialogVisible = false;
     }
   }
 }

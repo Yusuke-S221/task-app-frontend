@@ -64,4 +64,12 @@ describe('Issues', () => {
     expect(wrapper.vm.$data.fullscreenLoading).toBe(false)
     })
   })
+
+  describe("method closeCreateDialog", () => {
+    it("closes create dialog", () => {
+    wrapper.vm.$data.createDialogVisible = true
+    wrapper.vm.closeCreateDialog();
+    expect(wrapper.vm.$data.createDialogVisible).toBe(false)
+    })
+  })
 })
