@@ -106,10 +106,14 @@ export default {
     },
 
     async fetchProjects() {
-      const res = await this.$axios.$get(
-        "http://localhost:80/api/projects"
-      );
-      this.projects = res
+      try {
+        const res = await this.$axios.$get(
+          "http://localhost:80/api/projects"
+        );
+        this.projects = res
+      } catch (err) {
+        this.$message.error('プロジェクト取得に失敗しました');
+      }
     },
 
     async createProject() {
