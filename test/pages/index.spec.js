@@ -40,6 +40,7 @@ const mockAxios = {
 };
 
 const errorMockAxios = {
+  $get: jest.fn().mockResolvedValue(new Error('Error')),
   $post: jest.fn().mockResolvedValue(new Error('Error'))
 }
 
@@ -101,7 +102,7 @@ describe("Projects", () => {
       expect(mockAxios.$get).toHaveBeenCalledWith(
         "http://localhost:80/api/projects"
       );
-    });
+    })
   });
 
   describe("method createProject", () => {
