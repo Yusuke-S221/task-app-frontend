@@ -48,4 +48,20 @@ describe('Issues', () => {
   it("is a vue instance", () => {
     expect(wrapper.vm).toBeTruthy();
   });
+
+  describe("method startLoading", () => {
+    it("starts loading circle", () => {
+    wrapper.vm.$data.fullscreenLoading = false
+    wrapper.vm.startLoading();
+    expect(wrapper.vm.$data.fullscreenLoading).toBe(true)
+    })
+  })
+
+  describe("method endLoading", () => {
+    it("ends loading circle", () => {
+    wrapper.vm.$data.fullscreenLoading = true
+    wrapper.vm.endLoading();
+    expect(wrapper.vm.$data.fullscreenLoading).toBe(false)
+    })
+  })
 })

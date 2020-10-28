@@ -15,6 +15,22 @@ export default {
   components: {
     Header,
     Title
+  },
+
+  data() {
+    return {
+      fullscreenLoading: false
+    }
+  },
+
+  methods: {
+    startLoading() {
+      this.fullscreenLoading = true;
+    },
+
+    endLoading() {
+      this.fullscreenLoading = false;
+    }
   }
 }
 </script>
