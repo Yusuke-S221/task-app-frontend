@@ -4,34 +4,36 @@
     <div class="page-title">
       <Title>Issue一覧</Title>
     </div>
-        <div class="contents">
-      <div
-        v-for="issue in issues"
-        :key="issue.id"
-        :issue="issue"
-        class="issue-cards"
-      >
-          <Card>
-            <IssueCard>
-              <div class="issue-content">
-                <nuxt-link :to="`/issues/${issue.id}`">
-                  <div class="issue-id">
-                    <h3>{{ issue.id }}</h3>
-                  </div>
-                  <div class="issue-state">
-                    <h3>{{ issue.state }}</h3>
-                  </div>
-                  <div class="issue-title">
-                    <h3>{{ issue.title }}</h3>
-                  </div>
-                  <div class="issue-description">
-                    {{ issue.description }}
-                  </div>
-                </nuxt-link>
-              </div>
-            </IssueCard>
-          </Card>
-      </div>
+    <div class="contents">
+      <draggable :options="options">
+        <div
+          v-for="issue in issues"
+          :key="issue.id"
+          :issue="issue"
+          class="issue-cards"
+        >
+            <Card>
+              <IssueCard>
+                <div class="issue-content">
+                  <nuxt-link :to="`/issues/${issue.id}`">
+                    <div class="issue-id">
+                      <h3>{{ issue.id }}</h3>
+                    </div>
+                    <div class="issue-state">
+                      <h3>{{ issue.state }}</h3>
+                    </div>
+                    <div class="issue-title">
+                      <h3>{{ issue.title }}</h3>
+                    </div>
+                    <div class="issue-description">
+                      {{ issue.description }}
+                    </div>
+                  </nuxt-link>
+                </div>
+              </IssueCard>
+            </Card>
+        </div>
+      </draggable>
     </div>
   </div>
 </template>
@@ -41,11 +43,15 @@ import Header from "~/components/Header.vue";
 import Title from "~/components/Title.vue";
 import Card from "~/components/Card.vue";
 import IssueCard from "~/components/IssueCard.vue";
+import draggable from 'vuedraggable'
 
 export default {
   components: {
     Header,
-    Title
+    Title,
+    Card,
+    IssueCard,
+    draggable
   },
 
   data() {
@@ -56,13 +62,15 @@ export default {
       form: {
         title: "テストissue",
         description: "テスト内容"
+      },
+      options: {
+        animation: 300
       }
     }
   },
 
   async asyncData({ $axios }) {
     const res = await $axios.$get("http://localhost:80/api/issues");
-    console.log(res);
     return {
       issues: res
     };
